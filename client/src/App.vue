@@ -88,6 +88,9 @@
                 <b-spinner variant="primary" class="spin" label="Spinning"></b-spinner>
             </main>
         </b-container>
+        <footer class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-center footer">
+          Data Source<span class="mx-2">:</span><a href="https://www.worldometers.info/coronavirus/">Worldometers.info</a>
+        </footer>
     </div>
 </template>
 
@@ -209,6 +212,9 @@ export default {
 }
 .full-height {
   height:100%;
+}
+.footer {
+  padding:0.50rem !important;
 }
 @media screen and (max-width: 700px) {
   .mob {
