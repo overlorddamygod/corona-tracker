@@ -88,7 +88,7 @@
                 <b-spinner variant="primary" class="spin" label="Spinning"></b-spinner>
             </main>
         </b-container>
-        <footer class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-center footer">
+        <footer v-if="loaded" class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-center footer">
           Data Source<span class="mx-2">:</span><a href="https://www.worldometers.info/coronavirus/">Worldometers.info</a>
         </footer>
     </div>
@@ -100,8 +100,6 @@ import countTo from 'vue-count-to';
 import {getName} from 'country-list';
 import Bar from './components/Chart/Bar';
 import Doughnut from './components/Chart/Doughnut';
-
-
 
 export default {
   name: 'App',
@@ -130,15 +128,11 @@ export default {
       return {
         height: `200px`,
         width: `200px`,
-        // position: 'relative'
       }
     },
     barStyle () {
       return {
         height: `280px`,
-        // color:'red'
-        // width: `200px`,
-        // position: 'relative'
       }
     }
   },
