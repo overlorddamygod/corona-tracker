@@ -41,6 +41,8 @@ const getTopData = async () => {
                 }
             })
             country.push(countryData);
+            // console.log(countryData);
+            
         };   
     })
 }

@@ -8,7 +8,8 @@
       </header>
       <main v-if="loaded">
         <b-row>
-          <b-col cols=4><b-card
+          <b-col cols=4>
+          <b-card
           border-variant="danger"
           header="Cases"
           header-border-variant="danger"
@@ -17,7 +18,8 @@
           class="full-height"
           >
           <b-card-text><countTo v-if="loaded" :startVal=0 :endVal='details.cases' :duration='1200'></countTo></b-card-text>
-          </b-card></b-col>
+          </b-card>
+          </b-col>
           <b-col cols=4><b-card
           border-variant="danger"
           header="Deaths"
@@ -41,10 +43,16 @@
          
         </b-row>
         <b-row class="my-4">
+
           <b-col lg=6 sm=12 >
+
+            <bar :styles="barStyle" :details="details" :items="items" class="mb-3"></bar>
             <b-table responsive small hover striped outlined :items="items"></b-table>
           </b-col>
-          <b-col lg=6 sm=12 ><b-form-group id="input-group-3" label="Browse by country" label-for="input-3">
+          <b-col lg=6 sm=12 >
+                    <doughnut class="mx-auto mb-3" :styles="doughnutStyle" :countryData="countryData"></doughnut>
+            <b-form-group id="input-group-3" label="Browse by country" label-for="input-3">
+
         <b-form-select
           id="input-3"
           v-model="country"
@@ -74,7 +82,8 @@
         <div v-if="countryData.ActiveCases != ''">
           ActiveCases : {{countryData.ActiveCases}}
         </div>
-        </b-card></b-col>
+        </b-card>
+        </b-col>
         </b-row>
       </main>
       <main v-else><b-spinner variant="primary" class="spin" label="Spinning"></b-spinner></main>
@@ -87,6 +96,9 @@
 import axios from 'axios';
 import countTo from 'vue-count-to';
 import {getName} from 'country-list';
+import Bar from './components/Chart/Bar';
+import Doughnut from './components/Chart/Doughnut';
+
 
 
 export default {
@@ -107,7 +119,25 @@ export default {
     this.location();
   },
   components: {
-    countTo
+    countTo,
+    Bar,
+    Doughnut
+  },
+  computed: {
+    doughnutStyle () {
+      return {
+        height: `200px`,
+        width: `200px`,
+        // position: 'relative'
+      }
+    },
+    barStyle () {
+      return {
+        height: `280px`,
+        // width: `200px`,
+        // position: 'relative'
+      }
+    }
   },
   watch: {
     country: function() {
