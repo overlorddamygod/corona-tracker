@@ -1,95 +1,94 @@
 <template>
-  <div id="app">
-    <b-container>
-      <header class="title">
-        <div>
-        <h2>Corona Virus Tracker</h2>
-        </div>
-      </header>
-      <main v-if="loaded">
-        <b-row>
-          <b-col cols=4>
-          <b-card
-          border-variant="danger"
-          header="Cases"
-          header-border-variant="danger"
-          header-text-variant="danger"
-          align="center"
-          class="full-height"
-          >
-          <b-card-text><countTo v-if="loaded" :startVal=0 :endVal='details.cases' :duration='1200'></countTo></b-card-text>
-          </b-card>
-          </b-col>
-          <b-col cols=4><b-card
-          border-variant="danger"
-          header="Deaths"
-          header-border-variant="danger"
-          header-text-variant="danger"
-          align="center"
-          class="full-height"
-          >
-          <b-card-text><countTo v-if="loaded" :startVal=0 :endVal='details.deaths' :duration='1200'></countTo></b-card-text>
-          </b-card></b-col>
-          <b-col cols=4><b-card
-          border-variant="danger"
-          header="Recovered"
-          header-border-variant="danger"
-          header-text-variant="danger"
-          align="center"
-          class="full-height"
-          >
-          <b-card-text><countTo v-if="loaded" :startVal=0 :endVal='details.recovered' :duration='1200'></countTo></b-card-text>
-          </b-card></b-col>
-         
-        </b-row>
-        <b-row class="my-4">
+    <div id="app">
+        <b-container>
+            <header class="title my-2">
+                <div class="d-flex flex-column position-relative">
+                    <h2 class="mb-3">Corona Virus Tracker</h2>
+                    <small class="creator"><a target="_blank" href="https://github.com/overlorddamygod">By Pratham Byanjankar</a></small>
+                </div>
+            </header>
+            <main v-if="loaded">
+                <b-row class="my-3">
+                    <b-col cols=4>
+                        <div class="card text-white bg-secondary" style="max-width:20rem;">
+                            <div class="card-header text-center">
+                                <b-card-text>
+                                    <countTo v-if="loaded" :startVal=0 :endVal='details.cases' :duration='1200'></countTo>
+                                </b-card-text>
+                                <h6 class="mob card-title">Cases</h6>
+                                <h4 class="web card-title">Cases</h4>
+                            </div>
+                        </div>
+                    </b-col>
+                    <b-col cols=4>
+                        <div class="card text-white bg-secondary" style="max-width:20rem;">
+                            <div class="card-header text-center">
+                                <b-card-text>
+                                    <countTo v-if="loaded" :startVal=0 :endVal='details.deaths' :duration='1200'></countTo>
+                                </b-card-text>
+                                <h6 class="mob card-title">Deaths</h6>
+                                <h4 class="web card-title">Deaths</h4>
+                            </div>
+                        </div>
+                    </b-col>
 
-          <b-col lg=6 sm=12 >
+                    <b-col cols=4>
+                        <div class="card text-white bg-secondary" style="max-width:20rem;">
+                            <div class="card-header text-center">
+                                <b-card-text>
+                                    <countTo v-if="loaded" :startVal=0 :endVal='details.recovered' :duration='1200'></countTo>
+                                </b-card-text>
+                                <h6 class="mob card-title ">Recovered</h6>
+                                <h4 class="web card-title">Recovered</h4>
+                            </div>
+                        </div>
+                    </b-col>
 
-            <bar :styles="barStyle" :details="details" :items="items" class="mb-3"></bar>
-            <b-table responsive small hover striped outlined :items="items"></b-table>
-          </b-col>
-          <b-col lg=6 sm=12 >
-                    <doughnut class="mx-auto mb-3" :styles="doughnutStyle" :countryData="countryData"></doughnut>
-            <b-form-group id="input-group-3" label="Browse by country" label-for="input-3">
+                </b-row>
+                <b-row class="my-4">
 
-        <b-form-select
-          id="input-3"
-          v-model="country"
-          :options="countries"
-          required
-        ></b-form-select>
-      </b-form-group>
-      <b-card>
-        <div v-if="countryData.Country != ''">
-          Country : {{countryData.Country}}
-        </div>
-        <div v-if="countryData.TotalCases != ''">
-          TotalCases : {{countryData.TotalCases}}
-        </div>
-        <div v-if="countryData.NewCases != ''">
-          NewCases : {{countryData.NewCases}}
-        </div>
-        <div v-if="countryData.TotalDeaths != ''">
-          TotalDeaths : {{countryData.TotalDeaths}}
-        </div>
-        <div v-if="countryData.NewDeaths != ''">
-          NewDeaths : {{countryData.NewDeaths}}
-        </div>
-        <div v-if="countryData.TotalRecovered != ''">
-          TotalRecovered : {{countryData.TotalRecovered}}
-        </div>
-        <div v-if="countryData.ActiveCases != ''">
-          ActiveCases : {{countryData.ActiveCases}}
-        </div>
-        </b-card>
-        </b-col>
-        </b-row>
-      </main>
-      <main v-else><b-spinner variant="primary" class="spin" label="Spinning"></b-spinner></main>
-      <!-- <img class="corona-image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/2019-nCoV-CDC-23312_without_background.png/220px-2019-nCoV-CDC-23312_without_background.png" alt="corona"> -->
-    </b-container>
-  </div>
+                    <b-col lg=6 sm=12>
+
+                        <bar :styles="barStyle" :details="details" :items="items" class="mb-3"></bar>
+                        <b-table borderless	 responsive small hover striped  :items="items"></b-table>
+                    </b-col>
+                    <b-col lg=6 sm=12>
+                        <doughnut class="mx-auto mb-3" :styles="doughnutStyle" :countryData="countryData"></doughnut>
+                        <b-form-group id="input-group-3" label="Browse by country" label-for="input-3">
+
+                            <b-form-select id="input-3" v-model="country" :options="countries" required></b-form-select>
+                        </b-form-group>
+                        <b-card>
+                            <div v-if="countryData.Country != ''">
+                                Country : {{countryData.Country}}
+                            </div>
+                            <div v-if="countryData.TotalCases != ''">
+                                TotalCases : {{countryData.TotalCases}}
+                            </div>
+                            <div v-if="countryData.NewCases != ''">
+                                NewCases : {{countryData.NewCases}}
+                            </div>
+                            <div v-if="countryData.TotalDeaths != ''">
+                                TotalDeaths : {{countryData.TotalDeaths}}
+                            </div>
+                            <div v-if="countryData.NewDeaths != ''">
+                                NewDeaths : {{countryData.NewDeaths}}
+                            </div>
+                            <div v-if="countryData.TotalRecovered != ''">
+                                TotalRecovered : {{countryData.TotalRecovered}}
+                            </div>
+                            <div v-if="countryData.ActiveCases != ''">
+                                ActiveCases : {{countryData.ActiveCases}}
+                            </div>
+                        </b-card>
+                    </b-col>
+                </b-row>
+            </main>
+            <main v-else>
+                <b-spinner variant="primary" class="spin" label="Spinning"></b-spinner>
+            </main>
+        </b-container>
+    </div>
 </template>
 
 <script>
@@ -134,6 +133,7 @@ export default {
     barStyle () {
       return {
         height: `280px`,
+        // color:'red'
         // width: `200px`,
         // position: 'relative'
       }
@@ -167,6 +167,9 @@ export default {
 </script>
 
 <style>
+.card-header {
+  padding:1rem 0.6rem !important;
+}
 * {
   margin:0;
   padding:0;
@@ -176,6 +179,9 @@ export default {
 #app {
   height:100vh;
   max-height:100vh;
+}
+.mob {
+  display: none;
 }
 .title {
   display: flex;
@@ -190,6 +196,12 @@ export default {
   z-index: -1;
   opacity: 0.7;
 }
+.creator {
+  position: absolute;
+  bottom:0;
+  right:0;
+  font-size:0.8em;
+}
 .spin {
   position:absolute;
   top:48%;
@@ -199,8 +211,11 @@ export default {
   height:100%;
 }
 @media screen and (max-width: 700px) {
-  *{
-    font-size:1em;
+  .mob {
+    display:initial
+  }
+  .web {
+    display:none;
   }
 }
 

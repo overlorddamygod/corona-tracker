@@ -1,4 +1,5 @@
 import { Bar } from 'vue-chartjs';
+
 export default {
   extends: Bar,
   props: [
@@ -9,7 +10,7 @@ export default {
   mounted: function mounted() {
     this.renderChart({
       labels: this.items.map((item) => item.Country),
-      datasets: [{
+      datasets: [{        
         label: 'Total Cases',
         backgroundColor: '#f87979',
         data: this.items.map((item) => parseInt((item.TotalCases.replace(/,/g, '')/this.details.cases)*100))
@@ -25,11 +26,17 @@ export default {
           data: this.items.map((item) => parseInt((item.TotalRecovered.replace(/,/g, '')/this.details.recovered)*100))
         }]
     }, {
+        title: {
+          fontColor: 'red',
+        },
+
+        legend: {
+          labels: {
+          fontColor: 'whitesmoke',
+        }
+      },
       responsive: true,
       maintainAspectRatio: false
     });
-  },
-  watch() {
-
   }
 };

@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-import 'bootstrap/dist/css/bootstrap.css'
-// import 'bootswatch/dist/darkly/bootstrap.min.css'
+// import 'bootstrap/dist/css/bootstrap.css'
+import 'bootswatch/dist/darkly/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.config.productionTip = false

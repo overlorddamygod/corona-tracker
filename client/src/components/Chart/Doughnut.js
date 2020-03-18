@@ -22,10 +22,16 @@ export default {
         this.renderChart({
             labels: ['Cases', 'Deaths', 'Recovered'],
             datasets: [{
-              backgroundColor: ['#41B883', '#E46651', '#00D8FF'],
+              backgroundColor: ['#E46651', '#059BFF','#4BC0C0'],
+              borderWidth:1,
               data: [Cases,Deaths,Recovered]
             }]
-          }, {
+        }, {
+            legend: {
+              labels: {
+                fontColor: 'whitesmoke'
+              }
+            },
             responsive: true,
             maintainAspectRatio: false
           });
