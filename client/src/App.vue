@@ -8,6 +8,7 @@
                 </div>
             </header>
             <main v-if="loaded">
+                <!-- Details Cards -->
                 <b-row class="my-3">
                     <b-col cols=4>
                         <div class="card text-white bg-secondary" style="max-width:20rem;">
@@ -46,12 +47,13 @@
 
                 </b-row>
                 <b-row class="my-4">
-
+                    <!-- Top Infected Countries Section -->
                     <b-col lg=6 sm=12>
 
                         <bar :styles="barStyle" :details="details" :items="items" class="mb-3"></bar>
                         <b-table borderless	 responsive small hover striped  :items="items"></b-table>
                     </b-col>
+                    <!-- Individual Country Section -->
                     <b-col lg=6 sm=12>
                         <doughnut class="mx-auto mb-3" :styles="doughnutStyle" :countryData="countryData"></doughnut>
                         <b-form-group id="input-group-3" label="Browse by country" label-for="input-3">
@@ -63,33 +65,38 @@
                                 Country : {{countryData.Country}}
                             </div>
                             <div v-if="countryData.TotalCases != ''">
-                                TotalCases : {{countryData.TotalCases}}
+                                Total Cases : {{countryData.TotalCases}}
                             </div>
                             <div v-if="countryData.NewCases != ''">
-                                NewCases : {{countryData.NewCases}}
+                                New Cases : {{countryData.NewCases}}
                             </div>
                             <div v-if="countryData.TotalDeaths != ''">
-                                TotalDeaths : {{countryData.TotalDeaths}}
+                                Total Deaths : {{countryData.TotalDeaths}}
                             </div>
                             <div v-if="countryData.NewDeaths != ''">
-                                NewDeaths : {{countryData.NewDeaths}}
+                                New Deaths : {{countryData.NewDeaths}}
                             </div>
                             <div v-if="countryData.TotalRecovered != ''">
-                                TotalRecovered : {{countryData.TotalRecovered}}
+                                Total Recovered : {{countryData.TotalRecovered}}
                             </div>
                             <div v-if="countryData.ActiveCases != ''">
-                                ActiveCases : {{countryData.ActiveCases}}
+                                Active Cases : {{countryData.ActiveCases}}
                             </div>
                         </b-card>
                     </b-col>
                 </b-row>
+                <div class="help">
+                  <a target="_blank" href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019"><i class="fas fa-question fa-2x "></i></a>
+                </div>
             </main>
+            <!-- Spinner -->
             <main v-else>
                 <b-spinner variant="primary" class="spin" label="Spinning"></b-spinner>
             </main>
         </b-container>
+        <!-- Footer -->
         <footer v-if="loaded" class="navbar navbar-expand-lg navbar-dark bg-dark d-flex justify-content-center footer">
-          Data Source<span class="mx-2">:</span><a href="https://www.worldometers.info/coronavirus/">Worldometers.info</a>
+          Data Source<span class="mx-2">:</span><a target="_blank" href="https://www.worldometers.info/coronavirus/">Worldometers.info</a>
         </footer>
     </div>
 </template>
@@ -167,6 +174,26 @@ export default {
 .card-header {
   padding:1rem 0.6rem !important;
 }
+.help {
+  position:fixed;
+  height: 2.5rem;
+  width: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right:4%;
+  bottom:8%;
+  border-radius: 30px;
+  cursor:pointer;
+  background: #444444;
+  transition: all 0.5s ease-in;
+}
+.help a,.help a:hover {
+  color:white;
+}
+.help:hover {
+  transform: scale(1.1);
+}
 * {
   margin:0;
   padding:0;
@@ -214,7 +241,7 @@ export default {
   .mob {
     display:initial
   }
-  .web {
+  .web,.help {
     display:none;
   }
 }
