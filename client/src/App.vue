@@ -61,30 +61,31 @@
                             <b-form-select id="input-3" v-model="country" :options="countries" required></b-form-select>
                         </b-form-group>
                         <b-card>
-                            <div v-if="countryData.Country != ''">
+                            <div v-if="countryData.Country">
                                 Country : {{countryData.Country}}
                             </div>
-                            <div v-if="countryData.TotalCases != ''">
+                            <div v-if="countryData.TotalCases">
                                 Total Cases : {{countryData.TotalCases}}
                             </div>
-                            <div v-if="countryData.NewCases != ''">
+                            <div v-if="countryData.NewCases">
                                 New Cases : {{countryData.NewCases}}
                             </div>
-                            <div v-if="countryData.TotalDeaths != ''">
+                            <div v-if="countryData.TotalDeaths">
                                 Total Deaths : {{countryData.TotalDeaths}}
                             </div>
-                            <div v-if="countryData.NewDeaths != ''">
+                            <div v-if="countryData.NewDeaths">
                                 New Deaths : {{countryData.NewDeaths}}
                             </div>
-                            <div v-if="countryData.TotalRecovered != ''">
+                            <div v-if="countryData.TotalRecovered">
                                 Total Recovered : {{countryData.TotalRecovered}}
                             </div>
-                            <div v-if="countryData.ActiveCases != ''">
+                            <div v-if="countryData.ActiveCases">
                                 Active Cases : {{countryData.ActiveCases}}
                             </div>
                         </b-card>
                     </b-col>
                 </b-row>
+                <!-- <linegraph :latest="latest"></linegraph> -->
                 <div class="help">
                   <a target="_blank" href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019"><i class="fas fa-question fa-2x "></i></a>
                 </div>
@@ -107,6 +108,7 @@ import countTo from 'vue-count-to';
 import {getName} from 'country-list';
 import Bar from './components/Chart/Bar';
 import Doughnut from './components/Chart/Doughnut';
+// import Linegraph from './components/Chart/Line';
 
 export default {
   name: 'App',
@@ -115,10 +117,11 @@ export default {
         loaded:false,
         details:{},
         items: [],
-        country:'China',
-        countries:["Afghanistan","Albania","Algeria","Andorra","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahrain","Bangladesh","Belarus","Belgium","Bhutan","Bolivia","Bosnia and Herzegovina","Brazil","Brunei","Bulgaria","Burkina Faso","Cambodia","Cameroon","Canada","Cayman Islands","Channel Islands","Chile","China","Colombia","Costa Rica","Croatia","Cuba","Cyprus","Czechia","Denmark","Diamond Princess","Dominican Republic","DRC","Ecuador","Egypt","Estonia","Ethiopia","Faeroe Islands","Finland","France","French Guiana","French Polynesia","Gabon","Georgia","Germany","Ghana","Gibraltar","Greece","Guadeloupe","Guinea","Guyana","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Ivory Coast","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kuwait","Latvia","Lebanon","Liechtenstein","Lithuania","Luxembourg","Macao","Malaysia","Maldives","Malta","Martinique","Mexico","Moldova","Monaco","Mongolia","Morocco","Nepal","Netherlands","New Zealand","Nigeria","North Macedonia","Norway","Oman","Pakistan","Palestine","Panama","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Réunion","Romania","Russia","S. Korea","Saint Martin","San Marino","Saudi Arabia","Senegal","Serbia","Singapore","Slovakia","Slovenia","South Africa","Spain","Sri Lanka","St. Barth","St. Vincent Grenadines","Sudan","Sweden","Switzerland","Taiwan","Thailand","Togo","Trinidad and Tobago","Tunisia","Turkey","UAE","UK","Ukraine","USA","Vatican City","Vietnam"],
+        country:"Nepal",
+        countries:["Afghanistan","Albania","Algeria","Andorra","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahrain","Bangladesh","Belarus","Belgium","Bhutan","Bolivia","Bosnia and Herzegovina","Brazil","Brunei","Bulgaria","Burkina Faso","Cambodia","Cameroon","Canada","Cayman Islands","Channel Islands","Chile","Colombia","Costa Rica","Croatia","Cuba","Cyprus","Czechia","Denmark","Diamond Princess","Dominican Republic","DRC","Ecuador","Egypt","Estonia","Ethiopia","Faeroe Islands","Finland","France","French Guiana","French Polynesia","Gabon","Georgia","Germany","Ghana","Gibraltar","Greece","Guadeloupe","Guinea","Guyana","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Ivory Coast","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kuwait","Latvia","Lebanon","Liechtenstein","Lithuania","Luxembourg","Macao","Malaysia","Maldives","Malta","Martinique","Mexico","Moldova","Monaco","Mongolia","Morocco","Nepal","Netherlands","New Zealand","Nigeria","North America","North Macedonia","Norway","Oman","Pakistan","Palestine","Panama","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Réunion","Romania","Russia","S. Korea","Saint Martin","San Marino","Saudi Arabia","Senegal","Serbia","Singapore","Slovakia","Slovenia","South Africa","Spain","Sri Lanka","St. Barth","St. Vincent Grenadines","Sudan","Sweden","Switzerland","Taiwan","Thailand","Togo","Trinidad and Tobago","Tunisia","Turkey","UAE","UK","Ukraine","USA","Vatican City","Vietnam"],
         countryData:[], 
-        apiurl:window.location.hostname==="localhost"? 'http://localhost:5000/api/corona' : 'https://corona-tracker-api.herokuapp.com/api/corona'
+        apiurl:window.location.hostname==="localhost"? 'http://localhost:5000/api/corona' : 'https://corona-tracker-api.herokuapp.com/api/corona',
+        latest:[]
       }
   },
   created() {
@@ -128,7 +131,8 @@ export default {
   components: {
     countTo,
     Bar,
-    Doughnut
+    Doughnut,
+    // Linegraph
   },
   computed: {
     doughnutStyle () {
@@ -154,6 +158,9 @@ export default {
       this.details=data;
       const {data:details} = await axios.get(`${this.apiurl}/top`);
       this.items=details;
+      this.country=this.items[0].Country
+      // const {data:latest} = await axios.get(`${this.apiurl}/latest`);
+      // this.latest=latest;
       const {data:country} = await axios.get(`${this.apiurl}/${this.country}`);
       this.countryData=country;
       this.loaded=true;

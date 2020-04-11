@@ -1,8 +1,12 @@
 const router = require('express').Router();
 const cheerio = require('cheerio');
 const axios = require('axios');
+const mongoose = require('mongoose');
+const moment = require('moment-timezone');
+const dataModel = require('./model');
 
 const SITE_URL = 'https://www.worldometers.info/coronavirus/';
+const DB_URL = 'mongodb+srv://overlord:naruto77@cluster0-vgvvn.mongodb.net/corona-tracker?retryWrites=true&w=majority';
 const title =[
     'Country',
     'TotalCases',
@@ -16,9 +20,20 @@ const title =[
 ]
 const coronaTitles = ['cases', 'deaths', 'recovered']
 let country = [];
+let latest = [];
 let info = {};
 let countryData = {};
+const time = process.env.REFRESH_TIME || 900000;
 
+// Database Connection
+(async () => {
+    await mongoose.connect(DB_URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+})();
+let db = mongoose.connection;
+db.once('open', () => console.log('connected to the database'));
 
 const getData = async () => {
     info={}
@@ -32,12 +47,15 @@ const getTopData = async () => {
     const { data } = await axios.get(SITE_URL);
     const $ = cheerio.load(data);
     const countriesRow = $('tr');
+
     countriesRow.each((i, countryRow) => {            
         if (i > 0 && i < 6) {
             let countryData = {};
             $(countryRow).find('td').each((j, col) => {
                 if (j < 7) {
-                    countryData[title[j]] = $(col).text().trim();
+                    if ($(col).text().trim() != '') {
+                        countryData[title[j]] = $(col).text().trim();
+                    }
                 }
             })
             country.push(countryData);
@@ -46,32 +64,96 @@ const getTopData = async () => {
         };   
     })
 }
-const getCountryData = async (countryname) => {
+const getCountryData = async () => {
     countryData = {};
     const { data } = await axios.get(SITE_URL);
     const $ = cheerio.load(data);
     const countriesRow = $('tr');
+    // console.log(countriesRow.length);
+    
     countriesRow.each((i, countryRow) => {
-        if (i != 0) {
+        if (i != 0 && i <=177) {
             let countryn = {}
             const countryName = $(countryRow).find('td').first().text().trim();
-            $(countryRow).find('td').each((j, col) => {
-                countryn[title[j]] = $(col).text().trim();
-            })
-            countryData[countryName] = countryn;
+            
+            if (countryName.trim() != "Total:" || countryName.trim() != '') {
+                $(countryRow).find('td').each((j, col) => {
+                    if ($(col).text().trim() != '') {
+                        countryn[title[j]] = $(col).text().trim();
+                    }
+                })
+                countryData[countryName] = countryn;
+            }
         };
     })
+    // delete countryData['Total:'];
+    // delete countryData[''];
+    // console.log(countryData);
+    
 }
-getData();
-getTopData();
-getCountryData();
-setInterval(()=>getData(),900000);
-setInterval(()=>getTopData(),900000);
-setInterval(()=>getCountryData(),900000);
+const getter = async () => {
+    await getData();
+    await getTopData();
+    await getCountryData();
+    const now =Date.now()
+    const time = new Date(now)
+    const nepalTime = moment(time).tz('Asia/Kathmandu')
+    const timeGot = {
+        timestamp: now,
+        nepalTime: nepalTime.format(),
+        date: `${nepalTime.year()}/${nepalTime.date()}/${nepalTime.day()}`,
+        time: `${nepalTime.hour()}:${nepalTime.minute()}:${nepalTime.second()}`
+    }
+    const latest_data = await dataModel.find({}, null, {
+        limit: 10,
+        sort: {
+            timestamp: -1
+        }
+    })
+    latest = [];
+    latest_data.forEach(latestdata => {
+        const { timestamp, date, time, details } = latestdata;
+        latest.push({
+            timestamp,
+            date,
+            time,
+            details
+        })
+    })
+
+    // const { details } = a;
+
+    // console.log(latest);
+    
+    
+    // let datamodel = new dataModel();
+    // datamodel.timestamp = timeGot.timestamp;
+    // datamodel.date = timeGot.date;
+    // datamodel.time = timeGot.time;
+    // datamodel.details = info;
+    // datamodel.top_country = country;
+    // datamodel.all_country_data = countryData;
+    // await datamodel.save(function (err) {
+    //     if (!err) console.log('Success!');
+    // });
+}
+
+
+getter();
+setInterval(()=>getter(),time);
 
 router.get('/', (req, res) => {
     try {
         return res.json(info);
+    } catch (error) {
+        return res.json({
+            error: "Server Error"
+        });
+    }
+})
+router.get('/latest', (req, res) => {
+    try {
+        return res.json(latest);
     } catch (error) {
         return res.json({
             error: "Server Error"
@@ -99,5 +181,6 @@ router.get('/:countryname',(req, res) => {
         });
     }
 })
+
 
 module.exports = router;
